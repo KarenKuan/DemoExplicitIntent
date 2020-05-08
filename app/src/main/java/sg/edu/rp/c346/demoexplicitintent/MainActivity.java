@@ -6,8 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    // These request identify who started the second activity
+    int requestCodeForSupermanStats = 1;
+    int requestCodeForBatmanStats = 2;
 
     TextView tvSuperman, tvBatman;
 
@@ -28,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, HeroStatsActivity.class);
                 // Put hero object in intent
                 i.putExtra("hero", superman);
-                // Start the activity
-                startActivity(i);
+                // Start the activity with requestCodeForSupermanStatsto
+                // identify it was started by clicking on Superman
+                startActivityForResult(i, requestCodeForSupermanStats);
             }
         });
 
@@ -43,8 +49,36 @@ public class MainActivity extends AppCompatActivity {
                 //Put hero object in intent
                 i.putExtra("hero", batman);
                 // Start the activity
-                startActivity(i);
+                startActivityForResult(i, requestCodeForBatmanStats);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Only handle when 2nd activity closed normally
+        // and data contains something
+        if (resultCode == RESULT_OK) {
+            if (data != null) {
+                // Get data passed back from 2ndActivity
+                String like = data.getStringExtra("like");
+                String statement = "";
+                // If it is activity started by clicking
+                // Superman, create corresponding String
+                if (requestCode == requestCodeForSupermanStats) {
+                    statement = "You " + like + "Superman";
+                }
+
+                // If 2nd activity started by clicking
+                // Batman, create a corresponding String
+                if (requestCode == requestCodeForBatmanStats) {
+                    statement = "You " + like + "Batman";
+                }
+
+                Toast.makeText(MainActivity.this, statement, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

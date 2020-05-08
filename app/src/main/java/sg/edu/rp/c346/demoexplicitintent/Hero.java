@@ -1,6 +1,8 @@
 package sg.edu.rp.c346.demoexplicitintent;
 
-public class Hero {
+import java.io.Serializable;
+
+public class Hero implements Serializable {
 
     private String name;
     private int strength;
